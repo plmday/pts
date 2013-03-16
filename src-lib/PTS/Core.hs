@@ -270,6 +270,18 @@ typecheck t = case structure t of
     normalizeToSame tt2 tt3 t2' t3' (text "in if0") (text "then branch") (text "else branch")
     return (MkTypedTerm (IfZero t1' t2' t3') tt2)
 
+  Z -> debug "typecheck Z" t $ do
+    zt <- typecheck typeOfZ
+    return (MkTypedTerm Z zt)
+
+  S -> debug "typecheck S" t $ do
+    st <- typecheck typeOfS
+    return (MkTypedTerm S st)
+
+  R -> debug "typecheck R" t $ do
+    rt <- typecheck typeOfR
+    return (MkTypedTerm R rt)
+
   -- Position information
   Pos p t -> do
     -- trace ("Start: "++(show ctx) ++ " |- " ++ (show t) ++ " : ???") (return ())
