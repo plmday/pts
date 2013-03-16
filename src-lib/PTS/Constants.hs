@@ -11,6 +11,9 @@ newtype C = C Int
 int :: C
 int = C 0
 
+nat :: C
+nat = C 0
+
 star :: C
 star = C 1
 
