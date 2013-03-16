@@ -12,6 +12,9 @@ module PTS.AST
   , File (..)
   , typeOf
   , mkInt
+  , mkZ
+  , mkS
+  , mkR
   , mkIntOp
   , mkIfZero
   , mkVar
@@ -45,7 +48,7 @@ import System.IO.Unsafe (unsafePerformIO)
 
 import Parametric.AST (Name, Names, freshvarl)
 import Parametric.Error
-import PTS.Constants (C)
+import PTS.Constants (C, int)
 
 
 -- Syntax
@@ -94,6 +97,9 @@ evalOp Div = safeDiv
 
 data TermStructure alpha
   = Int     Integer
+  | Z
+  | S
+  | R
   | IntOp   Name BinOp alpha alpha
   | IfZero  alpha alpha alpha
   | Var     Name
@@ -146,6 +152,9 @@ mkTerm t = result where
 
 -- smart constructors
 mkInt i            =  mkTerm (Int i)
+mkZ                =  mkTerm Z
+mkS                =  mkTerm S
+mkR                =  mkTerm R
 mkIntOp n f t1 t2  =  mkTerm (IntOp n f t1 t2)
 mkIfZero t1 t2 t3  =  mkTerm (IfZero t1 t2 t3)
 mkVar n            =  mkTerm (Var n)
