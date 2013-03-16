@@ -12,17 +12,21 @@ module PTS.AST
   , File (..)
   , typeOf
   , mkInt
+  , mkIntOp
+  , mkIfZero
   , mkZ
   , mkS
   , mkR
-  , mkIntOp
-  , mkIfZero
   , mkVar
   , mkConst
   , mkApp
   , mkLam
   , mkPi
+  , mkArr
   , mkPos
+  , typeOfZ
+  , typeOfS
+  , typeOfR
   , mkUnquote
   , freshvarl
   , handlePos
@@ -48,7 +52,7 @@ import System.IO.Unsafe (unsafePerformIO)
 
 import Parametric.AST (Name, Names, freshvarl)
 import Parametric.Error
-import PTS.Constants (C, int)
+import PTS.Constants
 
 
 -- Syntax
@@ -164,6 +168,18 @@ mkLam n t1 t2      =  mkTerm (Lam n t1 t2)
 mkPi n t1 t2       =  mkTerm (Pi n t1 t2)
 mkPos p t          =  mkTerm (Pos p t)
 mkUnquote t        =  mkTerm (Unquote t)
+
+mkArr t1 t2        =  mkTerm (Pi (read "_") t1 t2)
+
+typeOfZ = mkConst nat
+
+typeOfS = mkArr (mkConst nat) (mkConst nat)
+
+typeOfR = mkPi (read "X") (mkConst (C 1))                              -- Pi X : Type1 .
+           (mkArr (var "X")                                            --   X ->
+             (mkArr (mkArr (mkConst nat) (mkArr (var "X") (var "X")))  --     (Nat -> X -> X) ->
+               (mkArr (mkConst nat) (var "X")) ) )                     --       (Nat -> X)
+  where var s = mkVar (read s)
 
 handlePos f p t = annotatePos p $ mkPos p <$> f t
 
