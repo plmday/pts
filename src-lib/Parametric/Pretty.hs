@@ -7,7 +7,7 @@ module Parametric.Pretty
   , multiLine
   ) where
 
-import Text.PrettyPrint.HughesPJ hiding (int)
+import Text.PrettyPrint.HughesPJ
 
 class Pretty p where
   pretty :: Int -> p -> Doc

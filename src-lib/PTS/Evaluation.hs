@@ -51,7 +51,7 @@ equiv (PiType n v1 f) (PiType _ v1' f') = do
   v2'  <- f'  (ResidualVar n')
   r2   <- equiv v2 v2'
   return (r1 && r2)
-equiv (ResidualIntOp n op v1 v2) (ResidualIntOp n' op' v1' v2') = do
+equiv (ResidualNatOp n op v1 v2) (ResidualNatOp n' op' v1' v2') = do
   let r1 = op == op'
   r2 <- equiv v1 v1'
   r3 <- equiv v2 v2'
@@ -103,10 +103,10 @@ reify (PiType n v1 f) = do
   v2 <- f (ResidualVar n')
   e2 <- reify v2
   return (mkPi n' e1 e2)
-reify (ResidualIntOp n op v1 v2) = do
+reify (ResidualNatOp n op v1 v2) = do
   e1 <- reify v1
   e2 <- reify v2
-  return (mkIntOp n op e1 e2)
+  return (mkNatOp n op e1 e2)
 reify (ResidualIfZero v1 v2 v3) = do
   e1 <- reify v1
   e2 <- reify v2
@@ -127,13 +127,13 @@ evalTerm env' t = runM (envToNames env) $ do
 
 eval :: Term -> Env M -> M (Value M)
 eval t env = case structure t of
-  Int n -> do
+  Nat n -> do
     return (Number n)
-  IntOp n op e1 e2 -> do
+  NatOp n op e1 e2 -> do
     v1 <- eval e1 env
     v2 <- eval e2 env
     return $
-      fromMaybe (ResidualIntOp n op v1 v2)
+      fromMaybe (ResidualNatOp n op v1 v2)
         (case (v1, v2) of
             (Number n1, Number n2) -> do
               Number <$> evalOp op n1 n2
@@ -149,7 +149,6 @@ eval t env = case structure t of
         v2   <- eval e2 env
         v3   <- eval e3 env
         return (ResidualIfZero v1 v2 v3)
-  Nat n -> return (Number n)
   S -> return Succ
   R -> return NRec
   App (MkTerm S) e -> do
@@ -205,8 +204,8 @@ eval t env = case structure t of
 
 {-
 data TermStructure alpha
-  = Int     Integer
-  | IntOp   Name BinOp alpha alpha
+  = Nat     Integer
+  | NatOp   Name BinOp alpha alpha
   | IfZero  alpha alpha alpha
   | Var     Name
   | Const   C

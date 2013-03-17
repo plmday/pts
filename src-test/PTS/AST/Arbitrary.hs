@@ -39,14 +39,14 @@ instance DistributeSize (Int, Int, Int) where
       fail "not enough size to distribute over three subterms.")
 
 arbitraryTerm = sized (\size -> oneof $
-    [  arbitraryInt
+    [  arbitraryNat
     ,  arbitraryVar
     ,  arbitraryPos
     ,  arbitraryConst
     ] ++
     (if size >= 2 then
     [  arbitraryApp
-    ,  arbitraryIntOp
+    ,  arbitraryNatOp
     ] else []) ++
     (if size >= 3 then
     [  arbitraryIfZero
@@ -54,11 +54,11 @@ arbitraryTerm = sized (\size -> oneof $
     ,  arbitraryPi
     ] else []))
 
-arbitraryInt = do
+arbitraryNat = do
   value <- arbitrary
-  return (mkInt value)
+  return (mkNat value)
 
-arbitraryIntOp = do
+arbitraryNatOp = do
   (s1, s2) <- distributeSize
 
   t1      <-  resize s1 arbitrary
@@ -69,7 +69,7 @@ arbitraryIntOp = do
                 ,  (read "mul", Mul)
                 ,  (read "div", Div)
                 ]
-  return (mkIntOp n f t1 t2)
+  return (mkNatOp n f t1 t2)
 
 arbitraryIfZero = do
   (s1, s2, s3) <- distributeSize

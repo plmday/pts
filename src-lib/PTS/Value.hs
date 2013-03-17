@@ -10,7 +10,7 @@ data Value m
   | NRec
   | Constant  C
   | PiType    Name (Value m) (Value m -> m (Value m))
-  | ResidualIntOp  Name BinOp (Value m) (Value m)
+  | ResidualNatOp  Name BinOp (Value m) (Value m)
   | ResidualIfZero (Value m) (Value m) (Value m)
   | ResidualVar    Name
   | ResidualApp    (Value m) (Value m)

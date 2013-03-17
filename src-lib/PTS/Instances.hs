@@ -18,7 +18,7 @@ import PTS.Constants
 --
 -- TODO: should be a record!
 --
--- axioms, sorts, relations, int, constants parser
+-- axioms, sorts, relations, nat, constants parser
 
 data PTS = PTS
   { sorts :: C -> Bool

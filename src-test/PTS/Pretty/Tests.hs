@@ -27,7 +27,7 @@ testPretty text term
 
 tests
   =  testGroup "PTS.Pretty"
-     [  testPretty "Int" (mkConst int)
+     [  testPretty "Nat" (mkConst nat)
      ,  testPretty "*" (mkConst star)
      ,  testPretty "**" (mkConst box)
      ,  testPretty "x" x

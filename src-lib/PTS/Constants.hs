@@ -8,9 +8,6 @@ import Data.Data
 newtype C = C Int
   deriving (Eq, Data, Typeable)
 
-int :: C
-int = C 0
-
 nat :: C
 nat = C 0
 
