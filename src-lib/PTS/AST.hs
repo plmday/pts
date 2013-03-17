@@ -14,6 +14,7 @@ module PTS.AST
   , mkInt
   , mkIntOp
   , mkIfZero
+  , mkNat
   , mkZ
   , mkS
   , mkR
@@ -24,7 +25,6 @@ module PTS.AST
   , mkPi
   , mkArr
   , mkPos
-  , typeOfZ
   , typeOfS
   , typeOfR
   , mkUnquote
@@ -101,7 +101,7 @@ evalOp Div = safeDiv
 
 data TermStructure alpha
   = Int     Integer
-  | Z
+  | Nat     Integer
   | S
   | R
   | IntOp   Name BinOp alpha alpha
@@ -156,7 +156,8 @@ mkTerm t = result where
 
 -- smart constructors
 mkInt i            =  mkTerm (Int i)
-mkZ                =  mkTerm Z
+mkNat i            =  mkTerm (Nat i)
+mkZ                =  mkTerm (Nat 0)
 mkS                =  mkTerm S
 mkR                =  mkTerm R
 mkIntOp n f t1 t2  =  mkTerm (IntOp n f t1 t2)
@@ -170,8 +171,6 @@ mkPos p t          =  mkTerm (Pos p t)
 mkUnquote t        =  mkTerm (Unquote t)
 
 mkArr t1 t2        =  mkTerm (Pi (read "_") t1 t2)
-
-typeOfZ = mkConst nat
 
 typeOfS = mkArr (mkConst nat) (mkConst nat)
 
