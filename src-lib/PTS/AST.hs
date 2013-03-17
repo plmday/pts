@@ -91,7 +91,10 @@ returnLift2 = ((Just .) .)
 
 evalOp :: BinOp -> (Integer -> Integer -> Maybe Integer)
 evalOp Add = returnLift2 (+)
-evalOp Sub = returnLift2 (-)
+evalOp Sub = safeSub
+  where
+    safeSub 0 y = Nothing
+    safeSub x y = Just $ x - y
 evalOp Mul = returnLift2 (*)
 evalOp Div = safeDiv
   where
