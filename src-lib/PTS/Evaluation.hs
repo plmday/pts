@@ -92,7 +92,9 @@ reify (Function n v1 f) = do
   e2 <- reify v2
   return (mkLam n' e1 e2)
 reify (Number n) = do
-  return (mkInt n)
+  return (mkNat n)
+reify Succ = return mkS
+reify NRec = return mkR
 reify (Constant c) = do
   return (mkConst c)
 reify (PiType n v1 f) = do
@@ -147,6 +149,37 @@ eval t env = case structure t of
         v2   <- eval e2 env
         v3   <- eval e3 env
         return (ResidualIfZero v1 v2 v3)
+  Nat n -> return (Number n)
+  S -> return Succ
+  R -> return NRec
+  App (MkTerm S) e -> do
+    v <- eval e env
+    case v of
+      Number n -> return (Number (n + 1))
+      _        -> return (ResidualApp Succ v)
+  App (MkTerm (App (MkTerm (App (MkTerm R) z)) s)) e -> do
+    v <- eval e env
+    case v of
+      Number 0 -> eval z env
+      Number n -> do
+        vs <- eval s env
+        case vs of
+          Function _ _ f -> do
+            vg <- f (Number (n - 1))
+            case vg of
+              Function _ _ g -> do
+                vr <- eval (mkApp (mkApp (mkApp mkR z) s) (mkNat (n - 1))) env
+                g vr
+              _ -> do vz <- eval z env
+                      return (ResidualApp (ResidualApp (ResidualApp NRec vz) vs) v)
+          _ -> do vz <- eval z env
+                  return (ResidualApp (ResidualApp (ResidualApp NRec vz) vs) v)
+--        eval (mkApp (mkApp s (mkNat (n - 1)))
+--                    (mkApp (mkApp (mkApp mkR z) s) (mkNat (n - 1))) )
+--             env
+      _ -> do vz <- eval z env
+              vs <- eval s env
+              return (ResidualApp (ResidualApp (ResidualApp NRec vz) vs) v)
   Var n -> do
     case lookup n env of
       Just v -> return v

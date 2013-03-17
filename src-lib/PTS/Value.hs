@@ -6,6 +6,8 @@ import PTS.Constants (C)
 data Value m
   = Function  Name (Value m) (Value m -> m (Value m))
   | Number    Integer
+  | Succ
+  | NRec
   | Constant  C
   | PiType    Name (Value m) (Value m -> m (Value m))
   | ResidualIntOp  Name BinOp (Value m) (Value m)
