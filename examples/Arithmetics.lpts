@@ -13,20 +13,21 @@ Values of type `Nat` can be written as numeric literals.
 > assert 123456789123456789123456789 : Nat;
 
 The operations `add`, `sub`, `mul` and `div` can be used to
-compute with numbers.
+compute with natural numbers.
 
 > assert add 1 2 : Nat = 3;
 > assert sub 2 1 : Nat = 1;
 > assert mul 2 3 : Nat = 6;
 > assert div 4 2 : Nat = 2;
 
-Values of type `Nat` can be negative.
+Values of type `Nat` can not be negative.
 
-> assert sub 1 2 : Nat = sub 2 3;
-> assert add (sub 1 2) 1 : Nat = 0;
+> assert sub 1 2 : Nat = sub 1 2;
+> assert sub 2 3 : Nat = sub 2 3;
+> assert add (sub 1 2) 1 : Nat = add (sub 1 2) 1;
 
-The result of division is rounded down to the nearest integral
-value.
+The result of division is rounded down to the nearest natural
+number.
 
 > assert div 6 1 : Nat = 6;
 > assert div 6 2 : Nat = 3;
@@ -36,13 +37,13 @@ value.
 > assert div 6 6 : Nat = 1;
 > assert div 6 7 : Nat = 0;
 >
-> assert div (sub 0 6) 1 : Nat = sub 0 6;
-> assert div (sub 0 6) 2 : Nat = sub 0 3;
-> assert div (sub 0 6) 3 : Nat = sub 0 2;
-> assert div (sub 0 6) 4 : Nat = sub 0 2;
-> assert div (sub 0 6) 5 : Nat = sub 0 2;
-> assert div (sub 0 6) 6 : Nat = sub 0 1;
-> assert div (sub 0 6) 7 : Nat = sub 0 1;
+> assert div (sub 0 6) 1 : Nat = div (sub 0 6) 1;
+> assert div (sub 0 6) 2 : Nat = div (sub 0 6) 2;
+> assert div (sub 0 6) 3 : Nat = div (sub 0 6) 3;
+> assert div (sub 0 6) 4 : Nat = div (sub 0 6) 4;
+> assert div (sub 0 6) 5 : Nat = div (sub 0 6) 5;
+> assert div (sub 0 6) 6 : Nat = div (sub 0 6) 6;
+> assert div (sub 0 6) 7 : Nat = div (sub 0 6) 7;
 
 Normalization stops when encountering division by zero.
 
